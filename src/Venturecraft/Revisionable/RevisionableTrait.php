@@ -446,7 +446,7 @@ trait RevisionableTrait
      */
     public function retrieveRequestIdentifierIfSet()
     {
-        if ((!isset($this->markRevisionPerRequest)) && $this->markRevisionPerRequest) {
+        if ((isset($this->markRevisionPerRequest)) && $this->markRevisionPerRequest) {
             return \Request::get("request_identifier", null);
         }
 
