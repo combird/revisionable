@@ -178,6 +178,7 @@ trait RevisionableTrait
                 $revisions[] = array(
                     'revisionable_type' => $this->getMorphClass(),
                     'revisionable_id' => $this->getKey(),
+                    'request_id' => $this->retrieveRequestIdentifierIfSet(),
                     'key' => $key,
                     'old_value' => array_get($this->originalData, $key),
                     'new_value' => $this->updatedData[$key],
@@ -220,6 +221,7 @@ trait RevisionableTrait
             $revisions[] = array(
                 'revisionable_type' => $this->getMorphClass(),
                 'revisionable_id' => $this->getKey(),
+                'request_id' => $this->retrieveRequestIdentifierIfSet(),
                 'key' => self::CREATED_AT,
                 'old_value' => null,
                 'new_value' => $this->{self::CREATED_AT},
@@ -247,6 +249,7 @@ trait RevisionableTrait
             $revisions[] = array(
                 'revisionable_type' => $this->getMorphClass(),
                 'revisionable_id' => $this->getKey(),
+                'request_id' => $this->retrieveRequestIdentifierIfSet(),
                 'key' => $this->getDeletedAtColumn(),
                 'old_value' => null,
                 'new_value' => $this->{$this->getDeletedAtColumn()},
@@ -434,5 +437,19 @@ trait RevisionableTrait
             $this->dontKeepRevisionOf = $donts;
             unset($donts);
         }
+    }
+
+    /**
+     * Get request identifier from request.
+     *
+     * @return null|string
+     */
+    public function retrieveRequestIdentifierIfSet()
+    {
+        if ((!isset($this->markRevisionPerRequest)) && $this->markRevisionPerRequest) {
+            return \Request::get("request_identifier", null);
+        }
+
+        return null;
     }
 }
