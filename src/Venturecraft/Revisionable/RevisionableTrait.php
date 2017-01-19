@@ -175,6 +175,12 @@ trait RevisionableTrait
             $revisions = array();
 
             foreach ($changes_to_record as $key => $change) {
+
+                // Replace password value with asterisks
+                if (isset($this->replacePassword) && $this->replacePassword && $key == "password") {
+                    $this->updatedData[$key] = str_repeat("*", 8);
+                }
+
                 $revisions[] = array(
                     'revisionable_type' => $this->getMorphClass(),
                     'revisionable_id' => $this->getKey(),
